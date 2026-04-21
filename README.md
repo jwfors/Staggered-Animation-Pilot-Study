@@ -1,7 +1,13 @@
 # Project Blog
 
-## Objects
-The main idea of this project stems from the staggering of objects to increase clarity during animations. For that sake I started by creating a way to dynamically set the positions of each of the objects on the Unity Canvas object. This makes sure that the objects will always be in the center of the screen and srpead out in the correct way, ensuring that the they always take up the same screen space and position relative to the screen it's viewed on. This does however make it look incredibly weird when viewd on a monitor with significantly more height than width - but that is something I consider to be an acceptable trade-off.
+The start of this project was spent getting initial idea and layout into Unity. This included creating a prefab for a placeholder object that I initialized and the logic and the logic for splitting the screen into equal parts in order to have evenly spaced objects. At this point in time moving them was no concern and I just wanted to be able to see what was happening, which I wasn't able to because I didn't initialize the objects as children. Fixing that did give me the visual I wanted, which is the objects centralized in the middle of the screen, evenly spaced out from left to right without clipping into either side of the screen.
 
-## The timer
-Another important aspect of this study will be the timer for the duration of visuals. This is main
+After some contemplation I decided to use Update() function rather than the FixedUpdate(). FixedUpdate() would make the logic easier, but as I am also making use of this project to learn and practice I decided to use the framerate reliant function instead.
+
+## Timers
+In accordance with this choice I decided to introduce a large amount of timers. These timers are built as a set of 2 floats, one goal and one counter. This idea is built upon the fact that LERP uses a fraction to decide what point between 2 Vector3 points it should give back, so being able to divide the counter by the total gives us a fraction that we can use in order to get the position for each object every frame. As this takes place in the Update() function I'm also making use of Time.deltaTime to add to the counters. 
+
+Not every counter starts ticking from the start, some are set to beging after eachother. In the cases where one timer relies on another to finish first, it checks for overflow on that earlier counter against the goal and then adds that overflow to the next counter. This ensures that each timer will always have the correct value. The current setup has 2 timers start ticking from the start, the one that overlays the numbers (more on that later, it doesn't actually do anything yet) and the one that counts the pre-wait. When the pre-wait finishes it starts the counter for the first set and for the stagger, and once the stagger counter is maxed it starts on the second set. 
+
+## Animation
+As explained before, I can use the fraction given by the timers as well as the initial starting position and the ending position in order to smoothly move the object between the 2 points and have it end up at the end position at the correct time. There is no need to make sure that the counter is less than the timer as LERP caps out the fractions between 0 and 1, so any overflow isn't counted into the position. As there is no end positions yet, they all just move to the far left side of the screen - but the animation seems smooth and they all end up at the end location at the same time!
