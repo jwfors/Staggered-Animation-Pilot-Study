@@ -26,4 +26,4 @@ For the end result the participant will be seeing two highlighted objects and tr
 Three sprites were created: a gray box, a red box and a yellow box. After instantiated all objects are given the gray color and the highlighted objects are given the yellow and red colors. Once the pre-wait is over the highlighted objects are returned to the gray color. Both the highlighted objects and the objects in the first set are spatially offset from the rest on the z-axis. This does not affect the visual from the game view, but does affect the visual in the scene view. This will be used when recording to have an objective truth of where the highlighted objects started and ended.
 
 ## Overlaid numbers
-Lastly, numbers were overlaid on top of the boxes by creating a new GameObject and placing those in order of left-to-right, 1-to-however many objects there are. 
+Lastly, numbers were overlaid on top of the boxes by creating a new GameObject and placing those in order of left-to-right, 1-to-n objects. 
