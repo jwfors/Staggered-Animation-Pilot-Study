@@ -26,4 +26,17 @@ For the end result the participant will be seeing two highlighted objects and tr
 Three sprites were created: a gray box, a red box and a yellow box. After instantiated all objects are given the gray color and the highlighted objects are given the yellow and red colors. Once the pre-wait is over the highlighted objects are returned to the gray color. Both the highlighted objects and the objects in the first set are spatially offset from the rest on the z-axis. This does not affect the visual from the game view, but does affect the visual in the scene view. This will be used when recording to have an objective truth of where the highlighted objects started and ended.
 
 ## Overlaid numbers
-Lastly, numbers were overlaid on top of the boxes by creating a new GameObject and placing those in order of left-to-right, 1-to-n objects. 
+Lastly, numbers were overlaid on top of the boxes by creating a new GameObject and placing those in order of left-to-right, 1-to-n objects.
+
+# Fianl Adjustments
+With everything basically finished it was time to decide on the final ranges for the movement and selected blocks. 
+
+## Movement ranges
+The movement ranged was defined as 2 to #Objects-2. The minimum is set to 2 in order to avoid trivial animations where 2 sets of blocks swap position with another block each. The maximum movement can't be #Objects, as this would move even the first object out of index. This is because a movement of "1" to the right is defined as ending up at index+1. If the object at Index 0 were to move #Objects it would therefore end up at index #Objects and be out of range. This means that with only a single moving object the maximum range has to be #Objects-1, and with two moving objects it requires #Objects-2.
+
+## Object selection ranges
+When a movement amount has been selected we select which two objects that will be moving in the first set, these are selected based on indexes.
+
+For left-movements it's chosen to be the Movement Amount to #Objects for the first object, and the Movement Amount to #Objects-1 for the second object, where the second objects is inscreased by one if it is the same size or larger than the first object. As with the movement range, an object on index 3 can't move 4 steps to the left without going out of bounds, but it can move 3 steps to index 0. As the maximum index is #Object-1, that had to be the maximum limit for the first object. The second object's lower maximum is to create an artifical gap that can be filled using the first object. This means that getting a lower value than Object 1 will leave it as it is, but getting an equal or larger value than object 1 pushes the range up a step. This means that in practice, both objects have the same possible range of values, but that object 2 can't get the same value as object 1.
+
+For right-movements it remains mostly the same. The lower bound for the first object is 0 and 1 for the second object, with the maximum bound being #Objects-(1+Movement amount). This ensures that whatever object is chosen has enough space to move the Movement amount of indexes to the right, as an array with n elements is only able to move index (n-x) with (x-1) steps to the right before going out of bounds as the max index is (m-1). The lower bound ensures the same push as with right-movements as object 2 is reduces by 1 if it's index is lower than object 1.
