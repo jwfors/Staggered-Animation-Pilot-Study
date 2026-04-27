@@ -12,6 +12,8 @@ Not every counter starts ticking from the start, some are set to beging after ea
 ## Animation
 As explained before, I can use the fraction given by the timers as well as the initial starting position and the ending position in order to smoothly move the object between the 2 points and have it end up at the end position at the correct time. There is no need to make sure that the counter is less than the timer as LERP caps out the fractions between 0 and 1, so any overflow isn't counted into the position. As there is no end positions yet, they all just move to the far left side of the screen - but the animation seems smooth and they all end up at the end location at the same time!
 
+https://youtu.be/Cc-OCZAnwFo
+
 ## First Set
 The objects that move are split up into two sets, the first set which only includes two objects and the second set which includes the rest. The first set is mean to be the initial objects that move and that the rest of the objects have to adjust themselves to. In order to select which ones go into the first set we need to know two things: Will the movement be left or right, and by how much will the movement be? Based on this we know what objects can be moved around without moving out of the screen or to an index outside the range. From that set of objects we then ranodmize 2, one from the full range and one from a a reduced range. If they are the same, the object from the smaller range is then increased or decreased depending on the direction of the movement. This ensures that both objects will be different and stay inside the range, but also that either object could ne smaller or larger than the other.
 
@@ -24,6 +26,8 @@ Once the ending positions for the first set has been decided it fills out the go
 For the end result the participant will be seeing two highlighted objects and try to track their movement throughout the animation. To avoid trivial animations (such as being able to look at both moving objects or two objects that don't move) the program will make sure that one highlighted object will always be from the first set that always moves and the second set that might move. The color the objects will be randomized so the user can't enticipate the movement through the highlighted objects.
 
 Three sprites were created: a gray box, a red box and a yellow box. After instantiated all objects are given the gray color and the highlighted objects are given the yellow and red colors. Once the pre-wait is over the highlighted objects are returned to the gray color. Both the highlighted objects and the objects in the first set are spatially offset from the rest on the z-axis. This does not affect the visual from the game view, but does affect the visual in the scene view. This will be used when recording to have an objective truth of where the highlighted objects started and ended.
+
+https://youtu.be/XVLwxOZEssg
 
 ## Overlaid numbers
 Lastly, numbers were overlaid on top of the boxes by creating a new GameObject and placing those in order of left-to-right, 1-to-n objects.
