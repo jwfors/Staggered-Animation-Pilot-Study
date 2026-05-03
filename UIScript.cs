@@ -25,6 +25,7 @@ public class UIScript : MonoBehaviour
     private float totalWaitTimer = 6.0f;
     private float totalWaitCount = 0.0f;
 
+    // Set timers for continuous animations
     private float firstSetAnimationTimer = 1.25f;
     private float firstSetAnimationCount = 0.0f;
 
@@ -56,6 +57,7 @@ public class UIScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Get Canvas dimensions
         GameObject canvas = this.gameObject;
         height = canvas.GetComponent<RectTransform>().rect.height;
         width = canvas.GetComponent<RectTransform>().rect.width;
@@ -63,11 +65,13 @@ public class UIScript : MonoBehaviour
         yPosition = height/2.0f;
         for(int i = 0; i < xPositions.Length; i++)
         {
+            // Evenly place out objects and set their sprite
             xPositions[i] = ((float) i+1.0f)*(width/(1.0f + (float) OBJECTCOUNT));
             visuals[i] = Instantiate(visualPrefab, new Vector3(xPositions[i], yPosition, 0), Quaternion.identity, this.transform);
             visuals[i].GetComponent<Image>().sprite = Default_Object;
         }
 
+        // Adjust timers if the animation is staggered
         if (isStaggered)
         {
             firstSetAnimationTimer = 0.75f;
@@ -165,6 +169,7 @@ public class UIScript : MonoBehaviour
     void resolveRemainingObjects(int[] remainingObjects)
     {
 
+        //Define ending positions for all remaining objects based on available positions
         int remainingObjectIndex = 0;
         for (int i = 0; i < visuals.Length; i++)
         {
@@ -199,6 +204,7 @@ public class UIScript : MonoBehaviour
 
         if (goLeft)
         {
+            //Pick 2 possible objects
             objOne = Random.Range(moveAmount, OBJECTCOUNT);
             objTwo = Random.Range(moveAmount, OBJECTCOUNT-1);
             if (objTwo >= objOne)
@@ -206,11 +212,13 @@ public class UIScript : MonoBehaviour
                 objTwo++;
             }
 
+            //Adjust their layer height 
             movingObjectIndex[0] = objOne;
             movingObjectIndex[1] = objTwo;
             increaseLayerHeight(objOne);
             increaseLayerHeight(objTwo);
 
+            //Define their end positions
             xGoalPositions[objOne] = xPositions[objOne - moveAmount];
             xGoalPositions[objTwo] = xPositions[objTwo - moveAmount];
             usedGoalIndexes[objOne - moveAmount] = true;
@@ -220,6 +228,7 @@ public class UIScript : MonoBehaviour
 
         } else
         {
+            //Pick 2 possible objects
             objOne = Random.Range(0, OBJECTCOUNT-moveAmount-1);
             objTwo = Random.Range(1, OBJECTCOUNT-moveAmount-1);
             if (objTwo <= objOne)
@@ -227,11 +236,13 @@ public class UIScript : MonoBehaviour
                 objTwo--;
             }
 
+            //Adjust their layer height 
             movingObjectIndex[0] = objOne;
             movingObjectIndex[1] = objTwo;
             increaseLayerHeight(objOne);
             increaseLayerHeight(objTwo);
 
+            //Define their end positions
             xGoalPositions[objOne] = xPositions[objOne + moveAmount];
             xGoalPositions[objTwo] = xPositions[objTwo + moveAmount];
             usedGoalIndexes[objOne + moveAmount] = true;
@@ -242,6 +253,7 @@ public class UIScript : MonoBehaviour
 
         }
 
+        //Define which objects are left
         int currentArrayIndex = 0;
         for (int i = 0; i < visuals.Length; i++)
         {
