@@ -6,17 +6,14 @@ using UnityEngine.UI;
 
 public class UIScript : MonoBehaviour
 {
+    // Imported files
     public GameObject visualPrefab;
     public Font textFont;
-
-
     public Sprite Default_Object;
     public Sprite Object_One_Image;
     public Sprite Object_Two_Image;
 
-    
     public bool isStaggered;
-
     public static int OBJECTCOUNT = 7;
 
     private float preWaitTimer = 3.0f;
@@ -38,6 +35,7 @@ public class UIScript : MonoBehaviour
     private bool inPreWait = true;
     private bool inStagger = false;
 
+    // Logic variables
     private float width;
     private float height;
     
@@ -51,7 +49,7 @@ public class UIScript : MonoBehaviour
 
     private bool numbersOverlaid = false;
 
-  private int[] movingObjectIndex = new int[2];
+    private int[] movingObjectIndex = new int[2];
     private int[] uniqueObjectIndex = new int[2];
 
     // Start is called before the first frame update
@@ -86,12 +84,15 @@ public class UIScript : MonoBehaviour
     void Update()
     {
         totalWaitCount += Time.deltaTime;
+
+        //Overlays numbers if enough time has passed
         if ((totalWaitCount > totalWaitTimer) & !numbersOverlaid)
         {
             numbersOverlaid = true;
 
             for(int i = 0; i < xPositions.Length; i++)
             {
+                //Adds number on top of a box
                 GameObject uiText = new GameObject();
                 uiText.transform.parent = visuals[i].transform.parent;
                 Vector3 approxPos = visuals[i].transform.position;
@@ -107,20 +108,24 @@ public class UIScript : MonoBehaviour
 
             }
         }
-
+        
         if (inPreWait)
         {
+            //Adjust time and check if leaving prewait
             preWaitCount += Time.deltaTime;
             if (preWaitCount > preWaitTimer)
             {
-
+                //Return sprites of highlighted objects to default sprite
                 for (int i = 0; i < uniqueObjectIndex.Length; i++) 
                 {
                     visuals[uniqueObjectIndex[i]].GetComponent<Image>().sprite = Default_Object;
                 }
 
+                //Remove prewait flag and adjust next counter with overshoot
                 inPreWait = false;
                 firstSetAnimationCount += preWaitTimer - preWaitCount;
+
+                //Start stagger count or second set count depending
                 if (staggerTimer > 0)
                 {
                     inStagger = true;
@@ -133,9 +138,11 @@ public class UIScript : MonoBehaviour
             }
         } else if (inStagger)
         {
+            //Increment counters
             staggerCount += Time.deltaTime;
             firstSetAnimationCount += Time.deltaTime;
 
+            //Check if leaving stagger
             if (staggerCount > staggerTimer)
             {
                 inStagger = false;
@@ -143,10 +150,12 @@ public class UIScript : MonoBehaviour
             }
         } else
         {
+            //Increment counters, overshoot does not matter.
             firstSetAnimationCount += Time.deltaTime;
             secondSetAnimationCount += Time.deltaTime;
         }
 
+        // Adjust positions with lerp, based on fraction of elapsed/total time.
         for(int i = 0; i < visuals.Length; i++)
         {
             Vector3 pos = visuals[i].transform.position;
@@ -184,6 +193,7 @@ public class UIScript : MonoBehaviour
 
     }
 
+    //Increases height of marked object to be visible from world view
     void increaseLayerHeight(int objectIndex)
     {
         Vector3 currentPos = visuals[objectIndex].transform.position;
@@ -272,8 +282,11 @@ public class UIScript : MonoBehaviour
 
     void highlightedObject(int objectIndex, bool isRed)
     {
+        //Offset position to be visible from world view
         Vector3 currentPos = visuals[objectIndex].transform.position;
         visuals[objectIndex].transform.position = new Vector3(currentPos.x, currentPos.y, currentPos.z-100);
+        
+        //Change sprite to visibly stick out
         if (isRed)
         {
             visuals[objectIndex].GetComponent<Image>().sprite = Object_One_Image;
@@ -285,11 +298,13 @@ public class UIScript : MonoBehaviour
 
     void pickUnique(int[] remainingObjects)
     {
+        //Selects an object from the first and second set
         int randomFirstSet = Random.Range(0, 2);
         int randomSecondSet = Random.Range(0, remainingObjects.Length);
 
         bool movingObjectIsRed = Random.Range(0, 2) == 0;
 
+        //Iterate through objects and mark correct objects as highlighted
         for (int i = 0; i < isFirstSet.Length; i++)
         {
             if (isFirstSet[i])
