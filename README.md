@@ -54,5 +54,5 @@ If I were to rework it I would start by sketching out which parts I need to keep
 
 I would also rework my handling of timers and counters. While I think this is a smart way to handle it based on my current knowledge, the large amount of public variables and complicated update function suggests to me that there has to be a better way to structure it. One obvious way would be to combine the timers into a list of structs. That together with seperating out the code into more defined functions would make the code easier read, understand and modify.
 
-#Generative AI disclaimer
+# Generative AI disclaimer
 While the use of generative AI within this project was minimal, it was still used from time to time. The answers produced by the LLM was always researched, verified and tested prior to be being accepted.
